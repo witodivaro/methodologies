@@ -4,19 +4,21 @@ import STAGES from "../stages";
 class Client {
   constructor() {
     this.goals = ["Collect rocks", "Build a castle", "Create infrastructure"];
+
+    this.workRate = null;
   }
 
   processStage(stage) {
     switch (stage) {
       case STAGES.PLAN:
-        this.createSprintRequirements();
+        this.adjustCurrentGoals(this.workRate);
         break;
       case STAGES.DEMONSTRATE:
         // Client can change the requirements during the
         // development process based on the intermediate result
 
         const rate = this.rateAccomplishedWork();
-        this.adjustCurrentGoals(rate);
+        this.workRate = rate;
         break;
     }
   }
