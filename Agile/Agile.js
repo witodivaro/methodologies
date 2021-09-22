@@ -12,15 +12,28 @@ class Agile {
     this.participators = [];
   }
 
+  static getStageParticipants(stage) {
+    const participants = [];
+    switch (stage) {
+      case STAGES.PLAN:
+      case STAGES.START:
+      case STAGES.SPRINT_END:
+      case STAGES.DEMONSTRATE:
+        participants.push(ROLES.CLIENT, ROLES.SCRUM_MASTER, ROLES.DEVELOPERS);
+      case STAGES.TEST:
+        participants.push(ROLES.QA);
+      case STAGES.DEVELOP:
+        participants.push(ROLES.DEVELOPERS);
+    }
+  }
+
   static getNextStage(currentStage) {
     let nextStage = null;
-    const participators = [];
 
     switch (currentStage) {
       case STAGES.START:
       case STAGES.SPRINT_END:
         nextStage = STAGES.PLAN;
-        participators.push(ROLES.CLIENT, ROLES.SCRUM_MASTER, ROLES.DEVELOPERS);
         break;
       case STAGES.PLAN:
         nextStage = STAGES.DEVELOP;
@@ -28,25 +41,21 @@ class Agile {
         break;
       case STAGES.DEVELOP:
         nextStage = STAGES.TEST;
-        participators.push(ROLES.QA);
         break;
       case STAGES.TEST:
         nextStage = STAGES.DEMONSTRATE;
-        participators.push(ROLES.CLIENT, ROLES.SCRUM_MASTER, ROLES.DEVELOPERS);
         break;
       case STAGES.DEMONSTRATE:
         nextStage = STAGES.SPRINT_END;
-        participators.push(ROLES.CLIENT, ROLES.SCRUM_MASTER, ROLES.DEVELOPERS);
         break;
     }
 
-    return { nextStage, participators };
+    return nextStage;
   }
 
   nextStage() {
-    const { nextStage, participators } = Agile.getNextStage(this.stage);
-    this.nextStage = nextStage;
-    this.participators = participators;
+    this.nextStage = Agile.getNextStage(this.stage);
+    this.participators = Agile.getStageParticipants(this.nextStage);
   }
 
   processCurrentStage() {
