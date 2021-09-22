@@ -12,6 +12,12 @@ class Client {
         this.createSprintRequirements();
         break;
       case STAGES.DEMONSTRATE:
+        // Client can change the requirements during the
+        // development process based on the intermediate result
+
+        const rate = this.rateAccomplishedWork();
+        this.adjustCurrentGoals(rate);
+        break;
     }
   }
 
@@ -32,19 +38,27 @@ class Client {
     return sprintGoal;
   }
 
+  adjustCurrentGoals(accomplishedWorkRate) {
+    let goal = null;
+
+    if (!accomplishedWorkRate) {
+      goal = this.createSprintRequirements();
+    }
+
+    if (accomplishedWorkRate === RATES.BAD) {
+      goal = "Do some important stuff.";
+    }
+
+    if (goal) {
+      this.goals.unshift(goal);
+    }
+  }
+
   rateAccomplishedWork() {
     const rates = Object.values(RATES);
     const rate = rates[Math.floor(Math.random() * 2)];
 
-    // Client can change the requirements during the
-    // development process based on the intermediate result
-    switch (rate) {
-      case RATES.AWESOME:
-        break;
-      case RATES.BAD:
-        this.goals.unshift("Do some important stuff");
-        break;
-    }
+    return rate;
   }
 }
 
